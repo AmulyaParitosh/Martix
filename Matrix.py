@@ -51,6 +51,9 @@ class Matrix:
         temp_m = []
         return cls(matrix[0])
 
+    def __del__(self):
+        del(self.matrix)
+
     def __str__(Mat: Matrix):
         for m in Mat.matrix:
             print(m)
@@ -254,6 +257,9 @@ class Matrix:
         else:
             raise Exception("Given matrix is not a square matrix")
 
+    def __len__(self):
+        return len(self.matrix)
+
     def rank(self) -> int:
         rank = 0
         matrix = deepcopy(self).matrix
@@ -297,11 +303,12 @@ class Matrix:
                 self.matrix[i][j] = self.matrix[j][i]
                 self.matrix[j][i] = temp
 
+    def to_upper(self):
+        sz = len(self)
 
-if __name__ == "__main__":
-    mat1 = Matrix.fromfile("input_file.txt", which=1)
-    mat2 = Matrix.oforder(2, 2, 2)
-    mat3 = Matrix([[1., 2.], [2., 1.]])
-    print(mat1**2)
-    print(~mat3)
-    print(mat1)
+        for i in range(sz-1):
+            for j in range(i+1, sz):
+                if(self.matrix[i][i] != 0):
+                    x = self.matrix[j][i]/self.matrix[i][i]
+                for e in range(sz):
+                    self.matrix[j][e] -= self.matrix[i][e]*x
