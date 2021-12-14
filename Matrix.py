@@ -257,26 +257,23 @@ class Matrix:
         else:
             raise Exception("Given matrix is not a square matrix")
 
-    def __len__(self):
-        return len(self.matrix)
-
     def rank(self) -> int:
         rank = 0
-        matrix = deepcopy(self).matrix
+        mat = deepcopy(self).matrix
+        l = len(mat)-1
+        for i in range(l):
 
-        for i in range(len(matrix)-1):
+            for j in range(i+1, len(mat)):
 
-            for j in range(i+1, len(matrix)):
-
-                if(matrix[i][i] != 0):
-                    x = matrix[j][i]/matrix[i][i]
+                if(mat[i][i] != 0):
+                    x = mat[j][i]/mat[i][i]
                 else:
                     x = 0
 
-                for e in range(len(matrix[i])):
-                    matrix[j][e] -= matrix[i][e]*x
+                for e in range(len(mat[i])):
+                    mat[j][e] -= mat[i][e]*x
 
-        for row in matrix:
+        for row in mat:
             for e in row:
                 if(e != 0):
                     rank += 1
@@ -291,7 +288,7 @@ class Matrix:
     def add_column(self, row: list, pos):
 
         for i in range(len(self.matrix)):
-            self.matrix[i].insert(pos, row[i])
+            self.matrix[i].insert(pos, row[i][0])
 
     def transpose(self):
 
@@ -304,7 +301,7 @@ class Matrix:
                 self.matrix[j][i] = temp
 
     def to_upper(self):
-        sz = len(self)
+        sz = len(self.matrix)
 
         for i in range(sz-1):
             for j in range(i+1, sz):
@@ -312,3 +309,24 @@ class Matrix:
                     x = self.matrix[j][i]/self.matrix[i][i]
                 for e in range(sz):
                     self.matrix[j][e] -= self.matrix[i][e]*x
+
+    def soe(mat1: Matrix, mat2: Matrix):
+
+        num_var = len(mat1.matrix[0])
+
+        rank_A = mat1.rank()
+
+        print(mat1)
+
+        mat1.add_column(mat2.matrix, len(mat1.matrix))
+
+        augmented_matrix = Matrix(mat1.matrix)
+
+        rank_A_B = augmented_matrix.rank()
+
+        if(rank_A_B == rank_A == num_var):
+            print("Unique")
+        elif(rank_A == rank_A_B and rank_A_B < num_var):
+            print("Infinite Solution")
+        else:
+            print("No Solution")
